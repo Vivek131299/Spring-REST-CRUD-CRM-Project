@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -49,5 +51,37 @@ public class CustomerRestController {
 		
 		return theCustomer;
 	}
+	
+	
+	// Add mapping for POST /customers - add new customer
+	@PostMapping("/customers")
+	public Customer addCustomer(@RequestBody Customer theCustomer) {
+	// Using @RequestBody Annotation, we can access the request body JSON data as a POJO.
+		
+		// also, just in case, the pass an id in JSON... set id to 0.
+		// This is to force to save of new item... instead of update.
+		// Because, as we are using Hibernate, it uses insertOrUpdate() method to insert
+		// into database. If the id is null or 0, then it(DAO) inserts into the database, otherwise it updates.
+		// So here we set id = 0 just in case if user pass an id into JSON.
+		theCustomer.setId(0);
+		
+		
+		// delegate the call to Service.
+		customerService.saveCustomer(theCustomer);
+		
+		return theCustomer;
+	}
+	// We tested this POST method in Postman client software.
+	// Set method to POST, paste URL- http://localhost:8080/spring-crm-rest/api/customers,
+	// Select Body, select raw, and JSON from dropdown, 
+	// Then write some json data for one customer to pass/add like- 
+	//	{
+	//    "firstName" : "Maria",
+	//    "lastName" : "Gomez",
+	//    "email" : "maria.gomez@luv2code.com"
+	//	}
+	// AND then click SEND.
+	// And then we can see the response below with the new id for this customer.
+	// So now finally we have this new customer added to our database.
 	
 }
