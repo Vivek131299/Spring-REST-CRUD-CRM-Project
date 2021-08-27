@@ -3,6 +3,7 @@ package com.luv2code.springdemo.rest;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -102,7 +103,7 @@ public class CustomerRestController {
 	// We tested this method same as previous method in Postman software.
 	// Just select PUT method.
 	// Else all same as above.
-	// BUT this time we also need to add id o fthe customer whose data we want to update, like-
+	// BUT this time we also need to add id of the customer whose data we want to update, like-
 	//	{
 	//	    "id" : 1,
 	//	    "firstName" : "Daniel",
@@ -112,4 +113,34 @@ public class CustomerRestController {
 	// So, customer with id = 1 will be get updated with this new data.
 	// And click SEND.
 	// It will just echo the same updated data in response section. 
+	
+	
+	
+	// Delete Customer
+	// add mapping for DELETE /customers/{customerId} - delete customer
+	// @DeleteMapping handles DELETE Requests. (like @GetMapping for GET, @PostMapping for POST and @PutMapping for PUT).
+	@DeleteMapping("/customers/{customerId}")
+	public String deleteCustomer(@PathVariable int customerId) {
+		
+		// Check if customer of passed id (customerId) exists. If not, throw Exception
+		Customer tempCustomer = customerService.getCustomer(customerId);
+		// So this will return null if customer of that id (customerID) doesn't exist.
+		
+		// throw Exception if null
+		if (tempCustomer == null) {
+			throw new CustomerNotFoundException("Customer is not found - " + customerId);
+		}
+		// else, if customer is not null, means if customer exists then,
+		// delegate the call to Service
+		customerService.deleteCustomer(customerId);
+		return "Deleted customer id - " + customerId;
+	}
+	// We also tested this DELETE Method in Postman software
+	// For this we just need to select DELETE method in dropdown, 
+	// then paste the link with /customerID like:
+	// http://localhost:8080/spring-crm-rest/api/customers/1
+	// So here customerId = 1, So it will delete customer of id = 1.
+	// And finally it will give message that we passed in return statement above in the response section like-
+	// Deleted customer id - 1
+	
 }
