@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -84,4 +85,31 @@ public class CustomerRestController {
 	// And then we can see the response below with the new id for this customer.
 	// So now finally we have this new customer added to our database.
 	
+	
+	
+	// Update Customer
+	// add mapping for PUT /customers - update existing Customer
+	// @PutMapping handles PUT request. (like @GetMapping for GET and @PostMapping for POST).
+	@PutMapping("/customers")
+	public Customer updateCustomer(@RequestBody Customer theCustomer) {
+		
+		// delegate the call to Service
+		customerService.saveCustomer(theCustomer);
+		// Since the customer id is set, DAO will update customer in the database.
+		
+		return theCustomer;
+	}
+	// We tested this method same as previous method in Postman software.
+	// Just select PUT method.
+	// Else all same as above.
+	// BUT this time we also need to add id o fthe customer whose data we want to update, like-
+	//	{
+	//	    "id" : 1,
+	//	    "firstName" : "Daniel",
+	//	    "lastName" : "Vega",
+	//	    "email" : "daniel.vega@luv2code.com"
+	//	}
+	// So, customer with id = 1 will be get updated with this new data.
+	// And click SEND.
+	// It will just echo the same updated data in response section. 
 }
