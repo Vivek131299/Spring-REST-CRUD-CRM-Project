@@ -36,6 +36,18 @@ public class CustomerRestController {
 		
 		// delegate the call to CustomerService
 		Customer theCustomer = customerService.getCustomer(customerId);
+		
+		// Now, there is actually an issue with this, like if we pass the Path Variable which is
+		// not in the database or out of bound,, then getCustomer() method will return null.
+		// AND if we pass any characters instead of integers, then it will throw an Exception.
+		//
+		// So, to SOLVE this, we will define our own custom Exception (CustomerNotFoundException).
+		// So, we will have a Global Exception Handler class / ControllerAdvice (CustomerRestExceptionHandler).
+		if (theCustomer == null) {
+			throw new CustomerNotFoundException("Customer is not found - " + customerId);
+		}
+		
 		return theCustomer;
 	}
+	
 }
